@@ -222,8 +222,9 @@ COLUMN_LABELS = {
 
 # Ordre d'affichage privilégié (les colonnes présentes hors liste suivent, triées).
 PREFERRED_ORDER = [
-    "companyid", "company_code", "company_name",
-    "legal_status.label", "mode", "live",
+    "companyid", "company_code", "company_name", "legal_status.label",
+    "template_menu.label", "lastconnect",
+    "mode", "live",
     "email", "phone",
     "address.addr", "address.addr2", "address.postcode", "address.town",
     "address.country.label", "address.country.iso2",
@@ -232,7 +233,7 @@ PREFERRED_ORDER = [
     "vat_number", "immat_number",
     "accounting.beginning_date", "accounting.ending_date",
     "term.payterm.label", "term.paytype.label",
-    "access_path", "lastconnect",
+    "access_path",
 ]
 
 _MODE_FR = {"BUSINESS": "Facturation (Business)", "BANKING": "Banque (Banking)"}

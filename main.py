@@ -559,10 +559,22 @@ with tab_dir:
         else:
             df = build_dataframe(_companies)
 
+            # Répartition production / test (colonne "Production" = "✅ Production" ou "🧪 …").
+            _prod_col = COLUMN_LABELS["live"]
+            if _prod_col in df.columns:
+                _is_prod = df[_prod_col].astype(str).str.contains("Production")
+                _n_prod, _n_test = int(_is_prod.sum()), int((~_is_prod).sum())
+            else:
+                _is_prod, _n_prod, _n_test = None, len(df), 0
+
             # --- Filtres ---
-            st.markdown(f"**{len(df)} société(s)**")
-            fcol1, fcol2, fcol3 = st.columns([2, 1, 1])
+            st.markdown(f"**{len(df)} société(s)** · 🏭 {_n_prod} en production · 🧪 {_n_test} en test/démo")
+            fcol1, fcol2, fcol3, fcol4 = st.columns([2, 1, 1, 1])
             _search = fcol1.text_input("🔎 Rechercher (nom, code, ville…)", key="dir_search")
+            _show_test = fcol4.checkbox(
+                "Inclure test/démo", value=False, key="dir_show_test",
+                help="Décoché : seuls les dossiers en production. Coché : affiche aussi les dossiers en test/démo.",
+            )
 
             # Filtre par site si la colonne existe
             _site_col = COLUMN_LABELS["home_site.home_site"]
@@ -580,6 +592,9 @@ with tab_dir:
                 _mode_sel = "— Tous —"
 
             view = df
+            # Par défaut : production uniquement. Coché : on garde tout.
+            if not _show_test and _is_prod is not None:
+                view = view[_is_prod]
             if _search:
                 _s = _search.lower()
                 mask = view.apply(
